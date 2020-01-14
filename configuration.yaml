@@ -1,0 +1,45 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+  name: Cheeseden Home Assistant
+  
+  latitude: 33.4427662
+  longitude: -111.7914842
+  
+  unit_system: imperial
+  time_zone: America/Phoenix
+  
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+wemo:
+    discovery: true
+    
+cover:
+  - platform: myq
+    username: !secret myq_user
+    password: !secret myq_pass
+    type: liftmaster
+    
+media_player:
+  # Use the Python ADB implementation
+  - platform: androidtv
+    name: Master Bedroom TV
+    host: 192.168.86.228
+
+ecovacs:
+  username: !secret ecovac_user
+  password: !secret ecovac_pass
+  country: us
+  continent: na
