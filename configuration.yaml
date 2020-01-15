@@ -1,18 +1,21 @@
 
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
-
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
-
-  name: Cheeseden Home Assistant
-  
   latitude: 33.4427662
   longitude: -111.7914842
-  
   unit_system: imperial
   time_zone: America/Phoenix
+  name: Cheeseden Home Assistant
+
+  
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: cheese-io.duckdns.org:8123
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+  
+
   
 # Text to speech
 tts:
@@ -35,11 +38,25 @@ cover:
 media_player:
   # Use the Python ADB implementation
   - platform: androidtv
-    name: Master Bedroom TV
-    host: 192.168.86.228
+    name: Den TV
+    host: 192.168.86.36
 
 ecovacs:
   username: !secret ecovac_user
   password: !secret ecovac_pass
   country: us
   continent: na
+
+sensor:
+  - platform: darksky
+    api_key: !secret darksky_secret
+    forecast:
+      - 0
+      - 1
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature 
+      - apparent_temperature
+      - humidity
+      - wind_speed
