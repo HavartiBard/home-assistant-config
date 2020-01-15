@@ -14,9 +14,6 @@ http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
 
-  
-
-  
 # Text to speech
 tts:
   - platform: google_translate
@@ -53,6 +50,7 @@ sensor:
     forecast:
       - 0
       - 1
+      - 2
     monitored_conditions:
       - summary
       - icon
