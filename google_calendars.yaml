@@ -1,0 +1,47 @@
+- cal_id: family09703962888052823357@group.calendar.google.com
+  entities:
+  - device_id: family_calendar
+    name: Family Events 
+    track: true
+
+- cal_id: jma8chz@gmail.com
+  entities:
+  - device_id: jma8chz_gmail_com
+    ignore_availability: true
+    name: jma8chz@gmail.com
+    track: true
+
+- cal_id: nba_21_%50hoenix+%53uns#sports@group.v.calendar.google.com
+  entities:
+  - device_id: phoenix_suns
+    ignore_availability: true
+    name: Phoenix Suns
+    track: true
+
+- cal_id: doubleonad@gmail.com
+  entities:
+  - device_id: doubleonad_gmail_com
+    ignore_availability: true
+    name: doubleonad@gmail.com
+    track: true
+
+- cal_id: captainzoom@gmail.com
+  entities:
+  - device_id: captainzoom_gmail_com
+    ignore_availability: true
+    name: captainzoom@gmail.com
+    track: true
+
+- cal_id: addressbook#contacts@group.v.calendar.google.com
+  entities:
+  - device_id: contacts
+    ignore_availability: true
+    name: Contacts
+    track: true
+
+- cal_id: p#weather@group.v.calendar.google.com
+  entities:
+  - device_id: weather
+    ignore_availability: true
+    name: Weather
+    track: true
