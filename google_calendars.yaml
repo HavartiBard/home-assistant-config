@@ -18,18 +18,25 @@
     name: Phoenix Suns
     track: true
 
-- cal_id: doubleonad@gmail.com
+- cal_id: p#weather@group.v.calendar.google.com
   entities:
-  - device_id: doubleonad_gmail_com
+  - device_id: weather
     ignore_availability: true
-    name: doubleonad@gmail.com
+    name: Weather
+    track: false
+
+- cal_id: pq7jjiqm7c05ie0bsig5aurtppeaj095@import.calendar.google.com
+  entities:
+  - device_id: mpsaz_calendar
+    ignore_availability: true
+    name: MPSAZ Calendar
     track: true
 
-- cal_id: captainzoom@gmail.com
+- cal_id: sp8l5ppi0fj99alfokl232ucqdvkctql@import.calendar.google.com
   entities:
-  - device_id: captainzoom_gmail_com
+  - device_id: macarthur_calendar
     ignore_availability: true
-    name: captainzoom@gmail.com
+    name: MacArthur Calendar
     track: true
 
 - cal_id: addressbook#contacts@group.v.calendar.google.com
@@ -37,11 +44,4 @@
   - device_id: contacts
     ignore_availability: true
     name: Contacts
-    track: true
-
-- cal_id: p#weather@group.v.calendar.google.com
-  entities:
-  - device_id: weather
-    ignore_availability: true
-    name: Weather
     track: true

@@ -6,10 +6,6 @@
 !*.yaml
 !.gitignore
 !*.md
-!/www/
-!/www/**
-!/custom_components/
-!/custom_components/**
 
 # Ignore folders.
 .storage
@@ -20,3 +16,4 @@
 ip_bans.yaml
 secrets.yaml
 known_devices.yaml
+

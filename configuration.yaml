@@ -44,15 +44,10 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # Sensors
-sensor: !include sensors.yaml
+#sensor: !include sensors.yaml
 
 wemo:
     discovery: true 
-#    static:
-#      - 192.168.0.108
-#      - 192.168.0.154
-#      - 192.168.0.65
-#      - 192.168.0.58
     
 cover:
   - platform: myq
@@ -60,17 +55,10 @@ cover:
     password: !secret myq_pass
     type: liftmaster
     
-#   Use the Python ADB implementation
 media_player:
   - platform: androidtv
-    name: Media Room Fire TV
-    host: 192.168.4.1
-  - platform: androidtv
     name: Master Fire TV
-    host: 192.168.86.228
-  - platform: androidtv
-    name: Den Fire TV
-    host: 192.168.86.36
+    host: 192.168.0.59
 
 amcrest:
   - host: 192.168.0.46
@@ -102,15 +90,15 @@ simplisafe:
     - username: !secret simplisafe_user
       password: !secret simplisafe_pass
 
-influxdb:
-  host: 192.168.0.174
-  port: 8086
-  database: sensors
-  username: sensor_store
-  password: BiCjsNZ6
-  include:
-    entities:
-      - sensor.edgesurvey_stream
+#influxdb:
+  #host: 192.168.0.174
+  #port: 8086
+  #database: sensors
+  #username: sensor_store
+  #password: BiCjsNZ6
+  #include:
+    #entities:
+      #- sensor.edgesurvey_stream
 
-shell_command:
-  tv_pcap: timeout 10s netcat  192.168.0.19 7070 > /usr/shar/hassio/homeassistant/www/pcaps/KitchenNightmare.`echo $(date +%s)`.pcap
+#shell_command:
+#  tv_pcap: timeout 10s netcat  192.168.0.19 7070 > /usr/shar/hassio/homeassistant/www/pcaps/KitchenNightmare.`echo $(date +%s)`.pcap

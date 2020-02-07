@@ -1,9 +1,0 @@
-  - alias: buffer_event
-    trigger:
-      platform: mqtt
-      topic: /home-assistant/edgesurvey_samsung/system/Bpsout
-      value_template: "{{ value | int / 1000 }}"
-      above: 25
-      below: 250
-    action:
-      service: shell_command.tv_pcap

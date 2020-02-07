@@ -22,8 +22,6 @@ resources:
     type: module
   - url: /community_plugin/surveillance-card/surveillance-card.js
     type: module
-  - url: /community_plugin/calendar-card/calendar-card.js
-    type: js
   - url: /local/custom-ui/weather-card/dist/weather-card.js
     type: js
   - url: /community_plugin/atomic_calendar/atomic_calendar.js
@@ -36,11 +34,13 @@ views:
 # 1 MAIN VIEW
   - id: home
     path: home
+    panel: false
     title: ''
     icon: 'mdi:home'
     badges:
       - entity: binary_sensor.updater
       - entity: person.james
+      - entity: person.jen
     cards:
       - entity: weather.dark_sky
         type: custom:weather-card
@@ -62,6 +62,8 @@ views:
         defaultMode: 2
         entities:
           - calendar.family_calendar
+          - calendar.macarthur_calendar
+          - calendar.mpsaz_calendar
         fullDayEventText: 'All day'
         untilText: 'Until'
         showColors: true
@@ -94,11 +96,13 @@ views:
     title: ''
     icon: 'mdi:thermometer-lines'
     cards:
+      - entity: weather.dark_sky
+        type: custom:weather-card
+        current: true
+        details: false
+        forecast: true
       - entity: climate.kids_rooms
         type: thermostat
-      - entity: weather.home
-        theme: Backend-selected
-        type: weather-forecast
       - entity: climate.dining_room
         type: thermostat
 
