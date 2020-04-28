@@ -1,5 +1,5 @@
-#  - platform: mqtt
-#    state_topic: "/home-assistant/edgesurvey_samsung/system/Bpsout"
-#    name: "edgesurvey_stream"
-#    unit_of_measurement: "Kbps out"
-#    value_template: '{{ value | int / 1000 }}'
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'date'

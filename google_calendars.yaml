@@ -1,15 +1,38 @@
+
+- cal_id: pq7jjiqm7c05ie0bsig5aurtppeaj095@import.calendar.google.com
+  entities:
+  - device_id: mpsaz_calendar
+    ignore_availability: true
+    name: MPSAZ District Calendar
+    track: true
+
 - cal_id: family09703962888052823357@group.calendar.google.com
   entities:
-  - device_id: family_calendar
-    name: Family Events 
+  - device_id: family
+    ignore_availability: true
+    name: Family Calendar
     track: true
 
 - cal_id: jma8chz@gmail.com
   entities:
   - device_id: jma8chz_gmail_com
     ignore_availability: true
-    name: jma8chz@gmail.com
+    name: James Calendar
     track: true
+
+- cal_id: sp8l5ppi0fj99alfokl232ucqdvkctql@import.calendar.google.com
+  entities:
+  - device_id: macarthur_calendar
+    ignore_availability: true
+    name: Macarthur Schools Calendar
+    track: true
+
+- cal_id: addressbook#contacts@group.v.calendar.google.com
+  entities:
+  - device_id: contacts
+    ignore_availability: true
+    name: Contacts
+    track: false
 
 - cal_id: nba_21_%50hoenix+%53uns#sports@group.v.calendar.google.com
   entities:
@@ -24,24 +47,3 @@
     ignore_availability: true
     name: Weather
     track: false
-
-- cal_id: pq7jjiqm7c05ie0bsig5aurtppeaj095@import.calendar.google.com
-  entities:
-  - device_id: mpsaz_calendar
-    ignore_availability: true
-    name: MPSAZ Calendar
-    track: true
-
-- cal_id: sp8l5ppi0fj99alfokl232ucqdvkctql@import.calendar.google.com
-  entities:
-  - device_id: macarthur_calendar
-    ignore_availability: true
-    name: MacArthur Calendar
-    track: true
-
-- cal_id: addressbook#contacts@group.v.calendar.google.com
-  entities:
-  - device_id: contacts
-    ignore_availability: true
-    name: Contacts
-    track: true

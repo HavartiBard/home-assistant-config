@@ -10,18 +10,19 @@ homeassistant:
   auth_providers:
     - type: trusted_networks
       trusted_networks:
-        - 192.168.0.0/24
         - 192.168.86.0/24
       allow_bypass_login: true
     - type: homeassistant
+    - type: legacy_api_password
+      api_password: !secret http_password
 
 default_config:
 
 recorder:
-  db_url: mysql://hass:BiCjsNZ6@core-mariadb/homeassistant?charset=utf8
+  db_url: mysql://hass:HoHwi9@core-mariadb/homeassistant?charset=utf8
 
-lovelace:
-  mode: yaml
+#lovelace:
+#  mode: yaml
 
 hacs:
   token: !secret hacs_token
@@ -29,11 +30,20 @@ hacs:
 frontend:
    themes: !include_dir_merge_named themes
 
+logger:
+  default: info
+  logs:
+    homeassistant.components.rest.sensor: debug
+
+duckdns:
+   domain: cheese-io
+   access_token: !secret duckdns_key
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
   base_url: cheese-io.duckdns.org:8123
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  #  ssl_certificate: /ssl/fullchain.pem
+  #  ssl_key: /ssl/privkey.pem
 
 # Text to speech
 tts:
@@ -55,26 +65,26 @@ cover:
     password: !secret myq_pass
     type: liftmaster
     
-media_player:
-  - platform: androidtv
-    name: Master Fire TV
-    host: 192.168.0.59
+#media_player:
+#  - platform: androidtv
+#    name: Master Fire TV
+#    host: 192.168.86.228
 
 amcrest:
-  - host: 192.168.0.46
+  - host: 192.168.86.58
     username: admin
-    password: cpQhFJ*39
+    password: BiCjsNZ6
     name: "Courtyard Camera"
     stream_source: rtsp
     binary_sensors:
       - motion_detected
       - online
 
-ecovacs:
-  username: !secret ecovac_user
-  password: !secret ecovac_pass
-  country: us
-  continent: na
+#ecovacs:
+#  username: !secret ecovac_user
+#  password: !secret ecovac_pass
+#  country: us
+#  continent: na
 
 weather:
   - platform: darksky
@@ -89,6 +99,42 @@ simplisafe:
   accounts:
     - username: !secret simplisafe_user
       password: !secret simplisafe_pass
+
+sensor:
+  - platform: rest
+    name: nutrislice
+    scan_interval: 3600
+    resource_template: https://mpsaz.nutrislice.com/menu/api/digest/school/macarthur/menu-type/lunch/date/{{now().year}}/{{now().month}}/{{now().day+1}}/?format=json
+    json_attributes:
+      - menu_items
+      - holiday_text
+      - date
+    value_template: '{{ value_json }}'
+            
+  - platform: template
+    sensors:
+      first_menu_item: 
+        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[0] }}'
+        friendly_name: 'First Choice'
+        icon_template: mdi:food
+      second_menu_item:
+        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[1] }}'
+        friendly_name: 'Second Choice'
+        icon_template: mdi:food
+      lunch_holiday_text:
+        value_template: '{{ state_attr("sensor.nutrislice", "holiday_text") }}'
+        icon_template: mdi:calendar
+          
+alexa_media:
+  accounts:
+    - email: !secret amazon_user
+      password: !secret amazon_pass
+      url: amazon.com
+
+remote:
+  - platform: broadlink
+    host: 192.168.86.56
+    mac: 24:df:a7:36:a9:d6
 
 #influxdb:
   #host: 192.168.0.174

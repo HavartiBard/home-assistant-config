@@ -6,27 +6,16 @@ custom_header:
         query_string: kiosk
       config:
         kiosk_mode: true
-    - conditions:
-        user: llnw
-      config:
-        hide_tabs: 
-          - 'home'
-          - 'lights'
-          - 'media'
-          - 'cameras'
-          - 'thermostat'
-   
 
 resources:
-  - url: /community_plugin/custom-header/custom-header.js
+  - url: /hacsfiles/calendar-card/calendar-card.js
     type: module
-  - url: /community_plugin/surveillance-card/surveillance-card.js
+  - url: /hacsfiles/custom-header/custom-header.js
     type: module
-  - url: /local/custom-ui/weather-card/dist/weather-card.js
+  - url: /hacsfiles/surveillance-card/surveillance-card.js
+    type: module
+  - url: /hacsfiles/weather-card/weather-card.js
     type: js
-  - url: /community_plugin/atomic_calendar/atomic_calendar.js
-    type: module 
-
 
 title: 'Kelsall Home'
 views:
@@ -39,55 +28,55 @@ views:
     icon: 'mdi:home'
     badges:
       - entity: binary_sensor.updater
-      - entity: person.james
+      - entity: person.james_kelsall
       - entity: person.jen
     cards:
+ #     - type: 'custom:atomic-calendar'
+ #       title: 'Home Calendar'
+ #       showMonth: true
+ #       maxDaysToShow: 7
+ #       defaultMode: 1
+ #       dayWrapperLineColor: orange
+ #       entities:
+ #         - entity: calendar.family_calendar
+ #         - entity: calendar.macarthur_calendar
+ #         - entity: calendar.mpsaz_calendar
+      - type: 'custom:calendar-card'
+        title: "My Calendar"
+        progressBar: true
+        entities:
+         - entity: calendar.family_calendar
       - entity: weather.dark_sky
         type: custom:weather-card
         current: true
         details: false
         forecast: true
-      - entities:
+      - type: glance
+        entities:
           - entity: cover.garage_door
-          - entity: switch.courtyard
-          - entity: switch.garage
+          - entity: switch.courtyard_lights
+          - entity: switch.driveway_lights
+          - entity: switch.sideyard
+          - entity: switch.projector
           - entity: switch.ice_machine
-        type: glance
       - entity: alarm_control_panel.1821_e_hope_st_alarm_control_panel
         name: Alarm Control
         type: alarm-panel
-      - type: custom:atomic-calendar
-        title: "Home Calendar"
-        enableModeChange: true
-        defaultMode: 2
+      - type: entities
         entities:
-          - calendar.family_calendar
-          - calendar.macarthur_calendar
-          - calendar.mpsaz_calendar
-        fullDayEventText: 'All day'
-        untilText: 'Until'
-        showColors: true
-        maxDaysToShow: 7
-        showLocation: true  
-        showMonth: false
-        showCurrentEventLine: false
-        dateColor: black
-        dateSize: 90
-        timeColor: blue
-        timeSize: 90
-        titleColor: black
-        titleSize: 100
-        locationIconColor: 'rgb(230, 124, 115)'
-        locationLinkColor: black
-        locationTextSize: 90
-        dimFinishedEvents: true
-        finishedEventOpacity: 0.6
-        finishedEventFilter: 'grayscale(100%)'
-        dayWrapperLineColor: black
-        eventBarColor: blue
-        showProgressBar: true
-        progressBarColor: blue
+          - switch.stereo_sub_pair_do_not_disturb_switch
+          - switch.stereo_sub_pair_repeat_switch
+          - switch.stereo_sub_pair_shuffle_switch
+      - type: media-control
+        entity: media_player.stereo_sub_pair
 
+#      - type: entities
+#        title: Lunch Menu
+#        entities:
+#          - entity: sensor.first_menu_item
+#            name: ' '
+#          - entity: sensor.second_menu_item
+#            name: ' '
 
 # 2 CLIMATE CONTROL
   - id: thermostat
