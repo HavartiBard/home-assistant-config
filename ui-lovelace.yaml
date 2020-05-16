@@ -1,161 +1,205 @@
-custom_header:
-  compact_mode: true
-  hide_config: true
-  exceptions:
-    - conditions:
-        query_string: kiosk
-      config:
-        kiosk_mode: true
-
-resources:
-  - url: /hacsfiles/calendar-card/calendar-card.js
-    type: module
-  - url: /hacsfiles/custom-header/custom-header.js
-    type: module
-  - url: /hacsfiles/surveillance-card/surveillance-card.js
-    type: module
-  - url: /hacsfiles/weather-card/weather-card.js
-    type: js
-
-title: 'Kelsall Home'
+title: Dashboard
 views:
-
-# 1 MAIN VIEW
-  - id: home
-    path: home
-    panel: false
-    title: ''
-    icon: 'mdi:home'
-    badges:
-      - entity: binary_sensor.updater
+  - badges:
       - entity: person.james_kelsall
       - entity: person.jen
+      - entity: person.emma
     cards:
- #     - type: 'custom:atomic-calendar'
- #       title: 'Home Calendar'
- #       showMonth: true
- #       maxDaysToShow: 7
- #       defaultMode: 1
- #       dayWrapperLineColor: orange
- #       entities:
- #         - entity: calendar.family_calendar
- #         - entity: calendar.macarthur_calendar
- #         - entity: calendar.mpsaz_calendar
-      - type: 'custom:calendar-card'
-        title: "My Calendar"
-        progressBar: true
-        entities:
-         - entity: calendar.family_calendar
-      - entity: weather.dark_sky
-        type: custom:weather-card
-        current: true
-        details: false
-        forecast: true
-      - type: glance
-        entities:
-          - entity: cover.garage_door
-          - entity: switch.courtyard_lights
-          - entity: switch.driveway_lights
-          - entity: switch.sideyard
-          - entity: switch.projector
-          - entity: switch.ice_machine
+      - cards:
+          - dateBottomFormat: ddd
+            dateTopFormat: DD
+            disableLinks: false
+            endText: End
+            entities:
+              - entity: calendar.family
+                name: calendar.family
+              - entity: calendar.jma8chz_gmail_com
+                name: James Calendar
+              - entity: calendar.mpsaz_calendar
+                name: MPSAZ District Calendar
+              - entity: calendar.phoenix_suns
+                name: Phoenix Suns
+              - entity: calendar.macarthur_calendar
+                name: Macarthur Schools Calendar
+            eventsLimit: '10'
+            fullDayEventText: All day
+            hardLimit: true
+            hideDeclined: true
+            hideHeader: true
+            hidePastEvents: true
+            hideTime: false
+            highlightToday: true
+            ignoreEventsByLocationExpression: ''
+            ignoreEventsExpression: ''
+            maxHeight: false
+            notifyDateTimeFormat: 'MM/DD/YYYY HH:mma'
+            notifyEntity: null
+            numberOfDays: '7'
+            progressBar: true
+            removeFromEventTitle: ''
+            showEventOrigin: false
+            showLocation: false
+            showLocationIcon: false
+            showMultiDay: true
+            startText: Start
+            timeFormat: 'HH:mma'
+            title: My Calendar
+            type: 'custom:calendar-card'
+          - entities:
+              - entity: switch.courtyard_lights
+              - entity: switch.driveway_lights
+              - entity: switch.sideyard
+            show_header_toggle: false
+            title: Outdoor Lights
+            type: entities
+        type: vertical-stack
+      - cards:
+          - entities:
+              - entity: alarm_control_panel.1821_e_hope_st_alarm_control_panel
+              - entity: cover.garage_door
+              - entity: switch.ice_machine
+            show_icon: true
+            show_name: true
+            type: glance
+          - card:
+              aspect_ratio: 50%
+              camera_image: camera.pool_camera
+              camera_view: live
+              entity: binary_sensor.wyze_pool_gate
+              image: /local/images/pool.jpg
+              type: picture-entity
+            conditions:
+              - entity: binary_sensor.wyze_pool_gate
+                state: 'on'
+            type: conditional
+          - card:
+              aspect_ratio: 50%
+              entity: cover.garage_door
+              image: /local/images/garage.png
+              type: picture-entity
+            conditions:
+              - entity: cover.garage_door
+                state_not: closed
+            type: conditional
+          - card:
+              entity: media_player.stereo_sub_pair
+              name: Kitchen Alexa
+              type: media-control
+            conditions:
+              - entity: media_player.stereo_sub_pair
+                state: playing
+            type: conditional
+        type: vertical-stack
+      - cards:
+          - current: true
+            details: false
+            entity: weather.dark_sky
+            forecast: true
+            type: 'custom:weather-card'
+          - entities:
+              - entity: sensor.dining_room_temperature
+              - entity: sensor.master_bedroom_temperature
+              - entity: sensor.kids_rooms_temperature
+              - entity: sensor.guest_room_temperature
+            type: glance
+          - entity: climate.dining_room
+            type: thermostat
+          - entity: climate.kids_rooms
+            type: thermostat
+        type: vertical-stack
+    icon: 'mdi:home'
+    panel: false
+    path: home
+    title: Home
+  - badges: []
+    cards:
       - entity: alarm_control_panel.1821_e_hope_st_alarm_control_panel
-        name: Alarm Control
+        states:
+          - arm_home
         type: alarm-panel
-      - type: entities
-        entities:
-          - switch.stereo_sub_pair_do_not_disturb_switch
-          - switch.stereo_sub_pair_repeat_switch
-          - switch.stereo_sub_pair_shuffle_switch
-      - type: media-control
-        entity: media_player.stereo_sub_pair
-
-#      - type: entities
-#        title: Lunch Menu
-#        entities:
-#          - entity: sensor.first_menu_item
-#            name: ' '
-#          - entity: sensor.second_menu_item
-#            name: ' '
-
-# 2 CLIMATE CONTROL
-  - id: thermostat
-    path: thermostat
-    panel: false
-    title: ''
-    icon: 'mdi:thermometer-lines'
+    icon: 'mdi:alarm'
+    path: alarm
+    title: Alarm
+  - badges: []
     cards:
-      - entity: weather.dark_sky
-        type: custom:weather-card
-        current: true
+      - current: true
         details: false
+        entity: weather.dark_sky
         forecast: true
-      - entity: climate.kids_rooms
-        type: thermostat
-      - entity: climate.dining_room
-        type: thermostat
-
-# 3 LIGHTS
-  - id: lights
-    path: lights
-    icon: 'mdi:lightbulb'
+        type: 'custom:weather-card'
+      - cards:
+          - entity: climate.dining_room
+            type: thermostat
+          - entity: climate.kids_rooms
+            type: thermostat
+        type: vertical-stack
+      - cards:
+          - entities:
+              - entity: climate.dining_room
+              - entity: sensor.dining_room_humidity
+            hours_to_show: 24
+            refresh_interval: 0
+            type: history-graph
+        type: vertical-stack
+      - - entities:
+            - entity: climate.dining_room
+              name: Dining Room
+            - color: gray
+              entity: climate.kids_room
+              name: Kids Hall
+          show:
+            labels: true
+            labels_secondary: true
+          type: 'custom:mini-graph-card'
+    icon: 'mdi:thermometer-lines'
     panel: false
-    title: ''
-    badges: []
+  - badges: []
     cards:
-      - type: entity-button
-        tap_action:
-          action: toggle
-        hold_action:
-          action: more-info
-        show_icon: true
-        show_name: true
-        entity: switch.garage
-        name: Driveway Lights
-        icon: 'mdi:lightbulb'
-      - type: entity-button
-        tap_action:
-          action: toggle
-        hold_action:
-          action: none
-        show_icon: true
-        show_name: true
-        entity: switch.courtyard
-        name: Courtyard Lights
-        theme: Backend-selected
-        icon: 'mdi:lightbulb'
-
-# 4 MEDIA
-  - id: media
-    path: media
-    title: ''
-    icon: 'mdi:movie-outline'
-    badges: []
-    cards: 
-      - type: media-control
-        entity: media_player.onkyo_tx_nr676_eee2a4
-
-# 5 SREAMING STATS
-  - id: stream_stats
-    path: stream_stats
-    title: ''
-    icon: 'mdi:youtube-tv'
+      - elements:
+          - entity: cover.garage_door
+            hold_action:
+              action: toggle
+            icon: 'mdi:garage'
+            style:
+              left: 77.5%
+              top: 71%
+            type: icon
+          - entity: switch.courtyard_lights
+            icon: 'mdi:lightbulb'
+            style:
+              left: 43%
+              top: 64%
+            tap_action:
+              action: toggle
+            type: icon
+        image: /local/images/floorplan.png
+        type: picture-elements
+    icon: 'mdi:floor-plan'
+  - badges: []
     cards:
-      - type: history-graph
-        entities:
-          - sensor.samsung_tv
-
-# 6 SURVEILLANCE
-  - id: cameras
-    path: cameras
-    title: Surveillance
+      - entities:
+          - entity: person.emma
+          - entity: person.james_kelsall
+        hours_to_show: 24
+        type: map
+    icon: 'mdi:map'
     panel: true
-    icon: mdi:cctv
+  - badges: []
     cards:
-      - type: custom:surveillance-card
-        thumb_interval: 15
-        update_interval: 2
-        cameras:
-          - entity: camera.courtyard_camera
-            motion_entity: binary_sensor.courtyard_camera_motion
+      - aspect_ratio: 50%
+        camera_image: camera.courtyard_camera
+        camera_view: live
+        entity: camera.courtyard_camera
+        show_name: true
+        show_state: false
+        type: picture-entity
+      - aspect_ratio: 50%
+        camera_image: camera.courtyard_camera
+        camera_view: live
+        entity: camera.pool_camera
+        show_name: true
+        show_state: false
+        type: picture-entity
+    icon: 'mdi:cctv'
+    panel: false
 

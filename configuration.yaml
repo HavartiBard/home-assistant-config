@@ -11,18 +11,16 @@ homeassistant:
     - type: trusted_networks
       trusted_networks:
         - 192.168.86.0/24
+        - 127.0.0.1
+        - 68.98.116.45
       allow_bypass_login: true
     - type: homeassistant
-    - type: legacy_api_password
-      api_password: !secret http_password
+#      api_password: !secret http_password
 
 default_config:
 
 recorder:
-  db_url: mysql://hass:HoHwi9@core-mariadb/homeassistant?charset=utf8
-
-#lovelace:
-#  mode: yaml
+  db_url: mysql://homeassistant:HoHwi9@core-mariadb/homeassistant?charset=utf8
 
 hacs:
   token: !secret hacs_token
@@ -34,16 +32,13 @@ logger:
   default: info
   logs:
     homeassistant.components.rest.sensor: debug
-
-duckdns:
-   domain: cheese-io
-   access_token: !secret duckdns_key
+    homeassistant.components.alexa: debug
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-http:
-  base_url: cheese-io.duckdns.org:8123
-  #  ssl_certificate: /ssl/fullchain.pem
-  #  ssl_key: /ssl/privkey.pem
+#http:
+#  base_url: cheese-io.duckdns.org:8123
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
 
 # Text to speech
 tts:
@@ -54,7 +49,14 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # Sensors
-#sensor: !include sensors.yaml
+sensor: !include sensors.yaml
+
+notify:
+  - platform: html5
+    name: KelsallFamily
+    vapid_pub_key: !secret vapid_pub_key
+    vapid_prv_key: !secret vapid_prv_key
+    vapid_email: !secret vapid_email  
 
 wemo:
     discovery: true 
@@ -65,10 +67,12 @@ cover:
     password: !secret myq_pass
     type: liftmaster
     
-#media_player:
-#  - platform: androidtv
-#    name: Master Fire TV
-#    host: 192.168.86.228
+media_player:
+  - platform: androidtv
+    name: Media Room Fire TV
+    host: 192.168.86.250
+    adb_server_ip: 127.0.0.1
+    adb_server_port: 5037
 
 amcrest:
   - host: 192.168.86.58
@@ -80,11 +84,11 @@ amcrest:
       - motion_detected
       - online
 
-#ecovacs:
-#  username: !secret ecovac_user
-#  password: !secret ecovac_pass
-#  country: us
-#  continent: na
+ecovacs:
+  username: !secret ecovac_user
+  password: !secret ecovac_pass
+  country: us
+  continent: na
 
 weather:
   - platform: darksky
@@ -100,31 +104,120 @@ simplisafe:
     - username: !secret simplisafe_user
       password: !secret simplisafe_pass
 
-sensor:
-  - platform: rest
-    name: nutrislice
-    scan_interval: 3600
-    resource_template: https://mpsaz.nutrislice.com/menu/api/digest/school/macarthur/menu-type/lunch/date/{{now().year}}/{{now().month}}/{{now().day+1}}/?format=json
-    json_attributes:
-      - menu_items
-      - holiday_text
-      - date
-    value_template: '{{ value_json }}'
-            
-  - platform: template
-    sensors:
-      first_menu_item: 
-        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[0] }}'
-        friendly_name: 'First Choice'
-        icon_template: mdi:food
-      second_menu_item:
-        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[1] }}'
-        friendly_name: 'Second Choice'
-        icon_template: mdi:food
-      lunch_holiday_text:
-        value_template: '{{ state_attr("sensor.nutrislice", "holiday_text") }}'
-        icon_template: mdi:calendar
+#sensor: 
+#  - platform: rest
+#    name: nutrislice
+##    scan_interval: 3600
+#    resource_template: https://mpsaz.nutrislice.com/menu/api/digest/school/macarthur/menu-type/lunch/date/{{now().year}}/{{now().month}}/{{now().day+1}}/?format=json
+#    json_attributes:
+#      - menu_items
+#      - holiday_text
+#      - date
+#    value_template: '{{ value_json }}'
+#            
+#  - platform: template
+#    sensors:
+#      first_menu_item: 
+#        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[0] }}'
+#        friendly_name: 'First Choice'
+#        icon_template: mdi:food
+#      second_menu_item:
+#        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[1] }}'
+#        friendly_name: 'Second Choice'
+#        icon_template: mdi:food
+#      lunch_holiday_text:
+#        value_template: '{{ state_attr("sensor.nutrislice", "holiday_text") }}'
+#        icon_template: mdi:calendar
+#
+#  - platform: template
+#    sensors:
+#      vacuum_filter:
+#        friendly_name: "Vacuum Filter Remaining Lifespan"
+#        value_template: "{{ state_attr('vacuum.deebot', 'component_filter') }}"
+#
+#  - platform: template
+#    sensors:
+#      mail_deliveries_message:
+#       friendly_name: "Deliveries Summary"
+#       entity_id: 
+#         - sensor.mail_usps_mail
+#         - sensor.mail_usps_delivering
+#         - sensor.mail_fedex_delivering
+#         - sensor.mail_ups_delivering
+#       value_template: > 
+#         {# Deliveries Sentence #}
+#           {% macro deliveries_sentence() -%}
+#                 {%- if states("sensor.mail_usps_mail")|int == 0 -%}
+#                   No
+#                 {%- else -%}
+#                   {{states("sensor.mail_usps_mail")|int}}
+#                 {%- endif -%}
+#               {{' '}} 
+##                 {%- if states("sensor.mail_usps_mail")|int <= 1 -%}
+#                   pieces of mail
+#                 {%- else -%}
+#                   pieces of mail
+#                 {%- endif -%}
+#               {{' '}}will be delivered.{{' '}} 
+#                 {%- if states("sensor.mail_usps_delivering")|int == 0 -%}
+#                   No
+#                 {%- else -%}
+#                   {{states("sensor.mail_usps_delivering")|int}}
+#                 {%- endif -%}
+#               {{' '}} 
+#                 {%- if states("sensor.mail_usps_delivering")|int == 1 -%}
+#                   USPS package is
+#                 {%- else -%}
+#                   USPS packages are
+#                 {%- endif -%}
+#               {{' '}}in transit.{{' '}}
+#                 {%- if states("sensor.mail_fedex_delivering")|int == 0 -%}
+#                   No
+#                 {%- else -%}
+#                   {{states("sensor.mail_fedex_delivering")|int}}
+#                 {%- endif -%}
+#               {{' '}} 
+#                 {%- if states("sensor.mail_fedex_delivering")|int == 1 -%}
+#                   FedEx package is
+#                 {%- else -%}
+#                   Fedex packages are
+#                 {%- endif -%}
+#               {{' '}}in transit.{{' '}}
+#               {%- if states("sensor.mail_ups_delivering")|int == 0 -%}
+#                   No
+#                 {%- else -%}
+#                   {{states("sensor.mail_ups_delivering")|int}}
+#                 {%- endif -%}
+#               {{' '}} 
+#                 {%- if states("sensor.mail_ups_delivering")|int == 1 -%}
+#                   UPS package is
+#                 {%- else -%}
+#                   UPS packages are
+#                 {%- endif -%}
+#               {{' '}}in transit.{{' '}}
+#               {%- if states("sensor.mail_amazon_packages")|int == 0 -%}
+#                   No
+#                 {%- else -%}
+#                   {{states("sensor.mail_amazon_packages")|int}}
+#                 {%- endif -%}
+#               {{' '}} 
+#                 {%- if states("sensor.mail_amazon_packages")|int == 1 -%}
+#                   Amazon package is
+#                 {%- else -%}
+#                   Amazon packages are
+#                 {%- endif -%}
+#               {{' '}}in transit.{{' '}}
+#           {%- endmacro %}
+#         {{deliveries_sentence()}}
+
+
+binary_sensor:
+  - platform: wyzesense
+    device: "/dev/hidraw0"
           
+alexa:
+  smart_home:
+
 alexa_media:
   accounts:
     - email: !secret amazon_user
@@ -136,15 +229,20 @@ remote:
     host: 192.168.86.56
     mac: 24:df:a7:36:a9:d6
 
-#influxdb:
-  #host: 192.168.0.174
-  #port: 8086
-  #database: sensors
-  #username: sensor_store
-  #password: BiCjsNZ6
-  #include:
-    #entities:
-      #- sensor.edgesurvey_stream
+camera:
+  - platform: ffmpeg
+    name: Pool Camera
+    input: -rtsp_transport tcp -i rtsp://kelsall:kelsall@192.168.86.34/live
+    #still_image_url: /local/images/pool.jpg
+    #stream_source: rtsp://kelsall:kelsall@192.168.86.34/live
+  - platform: local_file
+    file_path: /config/images/mail_and_packages/mail_today.gif
+    name: mail_usps
 
 #shell_command:
 #  tv_pcap: timeout 10s netcat  192.168.0.19 7070 > /usr/shar/hassio/homeassistant/www/pcaps/KitchenNightmare.`echo $(date +%s)`.pcap
+#
+#
+#
+#
+#

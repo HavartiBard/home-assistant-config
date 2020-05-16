@@ -1,5 +1,114 @@
-
-sensor:
+### sensor.yaml
+#
   - platform: time_date
     display_options:
       - 'date'
+
+### Nutrislice API - School lunches ###
+  - platform: rest
+    name: nutrislice
+    scan_interval: 3600
+    resource_template: https://mpsaz.nutrislice.com/menu/api/digest/school/macarthur/menu-type/lunch/date/{{now().year}}/{{now().month}}/{{now().day+1}}/?format=json
+    json_attributes:
+      - menu_items
+      - holiday_text
+      - date
+    value_template: '{{ value_json }}'
+            
+  - platform: template
+    sensors:
+      first_menu_item: 
+        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[0] }}'
+        friendly_name: 'First Choice'
+        icon_template: mdi:food
+      second_menu_item:
+        value_template: '{{ state_attr("sensor.nutrislice", "menu_items")[1] }}'
+        friendly_name: 'Second Choice'
+        icon_template: mdi:food
+      lunch_holiday_text:
+        value_template: '{{ state_attr("sensor.nutrislice", "holiday_text") }}'
+        icon_template: mdi:calendar
+
+### Deebot Vacuum data ###
+  - platform: template
+    sensors:
+      vacuum_filter:
+        friendly_name: "Vacuum Filter Remaining Lifespan"
+        value_template: "{{ state_attr('vacuum.deebot', 'component_filter') }}"
+
+### Mail and packages ###
+  - platform: template
+    sensors:
+      mail_deliveries_message:
+       friendly_name: "Deliveries Summary"
+       entity_id: 
+         - sensor.mail_usps_mail
+         - sensor.mail_usps_delivering
+         - sensor.mail_fedex_delivering
+         - sensor.mail_ups_delivering
+       value_template: > 
+         {# Deliveries Sentence #}
+           {% macro deliveries_sentence() -%}
+                 {%- if states("sensor.mail_usps_mail")|int == 0 -%}
+                   No
+                 {%- else -%}
+                   {{states("sensor.mail_usps_mail")|int}}
+                 {%- endif -%}
+               {{' '}} 
+                 {%- if states("sensor.mail_usps_mail")|int <= 1 -%}
+                   pieces of mail
+                 {%- else -%}
+                   pieces of mail
+                 {%- endif -%}
+               {{' '}}will be delivered.{{' '}} 
+                 {%- if states("sensor.mail_usps_delivering")|int == 0 -%}
+                   No
+                 {%- else -%}
+                   {{states("sensor.mail_usps_delivering")|int}}
+                 {%- endif -%}
+               {{' '}} 
+                 {%- if states("sensor.mail_usps_delivering")|int == 1 -%}
+                   USPS package is
+                 {%- else -%}
+                   USPS packages are
+                 {%- endif -%}
+               {{' '}}in transit.{{' '}}
+                 {%- if states("sensor.mail_fedex_delivering")|int == 0 -%}
+                   No
+                 {%- else -%}
+                   {{states("sensor.mail_fedex_delivering")|int}}
+                 {%- endif -%}
+               {{' '}} 
+                 {%- if states("sensor.mail_fedex_delivering")|int == 1 -%}
+                   FedEx package is
+                 {%- else -%}
+                   Fedex packages are
+                 {%- endif -%}
+               {{' '}}in transit.{{' '}}
+               {%- if states("sensor.mail_ups_delivering")|int == 0 -%}
+                   No
+                 {%- else -%}
+                   {{states("sensor.mail_ups_delivering")|int}}
+                 {%- endif -%}
+               {{' '}} 
+                 {%- if states("sensor.mail_ups_delivering")|int == 1 -%}
+                   UPS package is
+                 {%- else -%}
+                   UPS packages are
+                 {%- endif -%}
+               {{' '}}in transit.{{' '}}
+               {%- if states("sensor.mail_amazon_packages")|int == 0 -%}
+                   No
+                 {%- else -%}
+                   {{states("sensor.mail_amazon_packages")|int}}
+                 {%- endif -%}
+               {{' '}} 
+                 {%- if states("sensor.mail_amazon_packages")|int == 1 -%}
+                   Amazon package is
+                 {%- else -%}
+                   Amazon packages are
+                 {%- endif -%}
+               {{' '}}in transit.{{' '}}
+           {%- endmacro %}
+         {{deliveries_sentence()}}
+
